@@ -1,0 +1,47 @@
+byte segmentPins[] = {6, 12, 13, 14, 15, 16, 17}; 
+byte num[10]={
+  B0111111,//0  
+  B0000110,//1
+  B1011011,//2
+  B1001111,//3
+  B1100110,//4
+  B1101101,//5
+  B1111101,//6
+  B0000111,//7
+  B1111111,//8
+  B1101111 //9 
+ };
+#include <Keypad.h>
+const byte ROWS = 4; 
+const byte COLS = 4; 
+char keys[ROWS][COLS] = {
+{'F', 'E', 'D', 'C'}, {'B','3','6', '9'},
+{'A', '2', '5', '8'}, {'0', '1', '4', '7'}
+};
+byte rowPins[ROWS] = {5, 4, 3, 2};
+byte colPins[COLS] = {10,9,8,11};
+Keypad keypad =
+Keypad( makeKeymap(keys), rowPins,colPins, ROWS, COLS );
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(7,OUTPUT);
+  int i;
+  for(i=0;i<8;i++)
+  pinMode(segmentPins[i],OUTPUT);  
+}
+void loop(){
+char key = keypad.getKey(); 
+static int deciSeconds = 0;
+if (key != NO_KEY){
+    int Value=key-48,i;
+      Serial.println(key);
+      
+      for(i=0;i<7;i++){
+        if(bitRead(num[Value],i))
+          digitalWrite(segmentPins[i],HIGH);  
+        else
+          digitalWrite(segmentPins[i],LOW);
+      }
+}
+}
